@@ -3,6 +3,7 @@ from functools import singledispatchmethod
 from xml.etree import ElementTree as et
 
 from core.object_manager import ObjectManager
+from miniz.template.template_construction import IConstructor
 from miniz.interfaces.function import IFunction
 from miniz.interfaces.module import IModule
 from miniz.interfaces.oop import IClass, IInterface, ITypeclass, IStructure, IMethod
