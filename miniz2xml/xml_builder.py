@@ -99,6 +99,10 @@ class XMLBuilder:
                 for constructor in cls.constructors:
                     self.compile(constructor)
 
+            with self.root(self._sub_element("nested_definitions")):
+                for definition in cls.nested_definitions:
+                    self.compile(definition)
+
     @_cpl
     def _(self, fn: IFunction):
         if isinstance(fn, IMethod):
