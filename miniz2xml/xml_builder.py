@@ -112,6 +112,7 @@ class XMLBuilder:
 
         if isinstance(fn, IConstructor):
             tag = "generic-" + tag
+
         with self.root(self._sub_element(tag, id=self.om.get_object_id(fn), name=fn.name if fn.name is not None else "{Anonymous}", returns=str(fn.signature.return_type))):
             with self.om.scope("param"):
                 with self.root(self._sub_element("parameters")):
@@ -129,6 +130,7 @@ class XMLBuilder:
                                           binding="variadic-named", generic=str(isinstance(fn.signature.variadic_named_parameter, IConstructor)))
 
                 with self.root(self._sub_element("body")):
-                    with self.root(self._sub_element("instructions")), self.om.scope("inst"):
-                        for inst in fn.body.instructions:
-                            self.compile(inst)
+                    if fn.body.has_body:
+                        with self.root(self._sub_element("instructions")), self.om.scope("inst"):
+                            for inst in fn.body.instructions:
+                                self.compile(inst)
