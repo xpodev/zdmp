@@ -110,18 +110,23 @@ class XMLBuilder:
         else:
             tag = "function"
 
+        if isinstance(fn, IConstructor):
+            tag = "generic-" + tag
         with self.root(self._sub_element(tag, id=self.om.get_object_id(fn), name=fn.name if fn.name is not None else "{Anonymous}", returns=str(fn.signature.return_type))):
             with self.om.scope("param"):
                 with self.root(self._sub_element("parameters")):
                     for parameter in fn.signature.positional_parameters:
-                        self._sub_element("parameter", id=self.om.get_object_id(parameter), name=parameter.name, type=str(parameter.parameter_type), binding="positional")
+                        self._sub_element("parameter", id=self.om.get_object_id(parameter), name=parameter.name, type=str(parameter.parameter_type), binding="positional",
+                                          generic=str(isinstance(parameter, IConstructor)))
                     for parameter in fn.signature.named_parameters:
-                        self._sub_element("parameter", id=self.om.get_object_id(parameter), name=parameter.name, type=str(parameter.parameter_type), binding="named")
+                        self._sub_element("parameter", id=self.om.get_object_id(parameter), name=parameter.name, type=str(parameter.parameter_type), binding="named",
+                                          generic=str(isinstance(parameter, IConstructor)))
                     if fn.signature.variadic_positional_parameter:
                         self._sub_element("parameter", id=self.om.get_object_id(fn.signature.variadic_positional_parameter), name=parameter.name, type=str(parameter.parameter_type),
-                                          binding="variadic-positional")
+                                          binding="variadic-positional", generic=str(isinstance(fn.signature.variadic_positional_parameter, IConstructor)))
                     if fn.signature.variadic_named_parameter:
-                        self._sub_element("parameter", id=self.om.get_object_id(fn.signature.variadic_named_parameter), name=parameter.name, type=str(parameter.parameter_type), binding="variadic-named")
+                        self._sub_element("parameter", id=self.om.get_object_id(fn.signature.variadic_named_parameter), name=parameter.name, type=str(parameter.parameter_type),
+                                          binding="variadic-named", generic=str(isinstance(fn.signature.variadic_named_parameter, IConstructor)))
 
                 with self.root(self._sub_element("body")):
                     with self.root(self._sub_element("instructions")), self.om.scope("inst"):
