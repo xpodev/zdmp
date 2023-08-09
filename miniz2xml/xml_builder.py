@@ -1,6 +1,6 @@
 from contextlib import contextmanager
 from functools import singledispatchmethod
-from xml.etree import ElementTree as ET
+from xml.etree import ElementTree as et
 
 from core.object_manager import ObjectManager
 from miniz.interfaces.function import IFunction
@@ -10,11 +10,11 @@ from miniz.vm.instruction import Instruction
 
 
 class XMLBuilder:
-    _root: ET.Element
+    _root: et.Element
     _om: ObjectManager
 
     def __init__(self, name: str, info: dict, om: ObjectManager = None):
-        self._root = ET.Element("zsharp-project", attrib={
+        self._root = et.Element("zsharp-project", attrib={
             **info,
             "project-name": name
         })
@@ -25,7 +25,7 @@ class XMLBuilder:
         return self._om
 
     def _sub_element(self, tag: str, attrib: dict[str, str] = None, **extra: str):
-        return ET.SubElement(self._root, tag, attrib or {}, **extra)
+        return et.SubElement(self._root, tag, attrib or {}, **extra)
 
     def compile(self, item):
         self._compile(item)
@@ -33,11 +33,11 @@ class XMLBuilder:
 
     def dump(self, indent: str | None = "  "):
         if indent is not None:
-            ET.indent(self._root, space=indent)
-        return ET.tostring(self._root, encoding="unicode")
+            et.indent(self._root, space=indent)
+        return et.tostring(self._root, encoding="unicode")
 
     @contextmanager
-    def root(self, element: ET.Element):
+    def root(self, element: et.Element):
         root, self._root = self._root, element
         try:
             yield self._root
