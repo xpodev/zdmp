@@ -89,7 +89,8 @@ class XMLBuilder:
 
             with self.root(self._sub_element("fields")):
                 for field in cls.fields:
-                    self._sub_element("field", id=self.om.get_object_id(field), name=field.name, type=str(field.field_type), binding=field.binding.value.lower())
+                    self._sub_element("field", id=self.om.get_object_id(field), name=field.name, type=f"{field.field_type}[{self.om.get_object_id(field.field_type)}]",
+                                      binding=field.binding.value.lower())
 
             with self.root(self._sub_element("methods")):
                 for function in cls.methods:
